@@ -76,4 +76,4 @@ itself at runtime. They are gitignored.
 
 ## License
 
-Not yet declared.
+[MIT](LICENSE) © 2026 Gleb Kalinin

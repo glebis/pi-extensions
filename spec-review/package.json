@@ -1,0 +1,14 @@
+{
+  "name": "spec-review",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Independent specification review before implementation, with a hash-bound acceptance barrier",
+  "type": "module",
+  "keywords": ["pi-package"],
+  "pi": { "extensions": ["./index.ts"] },
+  "scripts": { "test": "node --test test/*.test.mjs" },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "*"
+  }
+}

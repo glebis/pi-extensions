@@ -2,7 +2,8 @@
 
 A collection of [pi](https://github.com/earendil-works/pi-mono) extensions — the
 customizations that make pi a native participant in the rest of my environment:
-answer panels, pane orchestration, Telegram, and project server management.
+answer panels, pane orchestration, Telegram, project server management, and
+pre-implementation specification review.
 
 Each extension is self-contained: drop its file (or directory) into
 `~/.pi/agent/extensions/` and pi loads it. Reload a running session with
@@ -18,11 +19,13 @@ Each extension is self-contained: drop its file (or directory) into
 | [`goal.ts`](goal.ts) | **Bounded goal loop.** `/goal <objective>` (or `/goal draft <objective>` to let the model propose a completion contract: outcome / verify / constraints / boundaries / stop) makes the agent work an objective across turns until a judge sees it *done*, then stops itself. The judge is the model's own machine-readable status line (`GOAL-STATUS: DONE|CONTINUE|WAIT — <evidence>`, parsed by [`goal-core.ts`](goal-core.ts)), upgraded to **Jev** (typed choice + verification boolean over HTTP, bounded and redacted) when `AI_GATEWAY_API_KEY` is set; a `done` whose verification is not visible in the reply is downgraded to `continue`, and a `done` below 0.6 confidence is refused. Rails: turn budget (default 8, max 20), three unreadable turns auto-pause, ≥90% context belongs to compaction, **queued human input steers instead of being looped over**, a goal only drives the session that set it, and nothing runs on `aborted`/`error` stops. Also `/goal status · outcome|verify · sub · max N · judge auto\|jev\|sentinel · pause|resume|done|clear`. |
 | [`prompt-stash.ts`](prompt-stash.ts) | Stash the prompt you're typing with `ctrl+s`, and get it back on the next `ctrl+s` or right after you send. With text on both sides it swaps instead of overwriting — nothing is lost. Footer shows a `stash: …` indicator. |
 | [`cenno/`](cenno/) | Registers `ask_user` / `ask_sequence` so the agent asks through **cenno** floating macOS panels by default, instead of ending a turn with a plain-text question. Answers come back structured; a timeout is `{answered:false}`, never a yes. Also `/cenno-test`. |
+| [`spec-review/`](spec-review/) | **Specification review before implementation.** `/spec-review` opens a TUI panel that dispatches independent reviewers as separate pi / Codex CLI / Claude Code processes, each on the same checklist (completeness, contradictions, implementability, security, boundaries, acceptance criteria, tests). Findings trigger a discussion round; the lead sees both passes, edits the spec and re-checks. Acceptance is bound to the SHA-256 of the exact spec content, so any edit voids it. Optional `autoSpec` barrier blocks shell and unknown tools until the spec is accepted, with `/spec-review-bypass <reason>` as an audited escape. No paid model calls in the tests. |
 | [`run.ts`](run.ts) | `/run` detects the current project's launch recipe (`package.json`, `Makefile`, `Procfile`, `docker-compose`) and starts it, with `status` / `logs` / `stop` / `restart`. Managed mode captures output into a ring buffer and kills the process group on session shutdown; `--pane` opens a real herdr tab that outlives the session. Checks the recipe's binary against `PATH` first, so a missing toolchain isn't just an opaque exit 127. |
 
 ### Orchestration
 
 | Extension | What it does |
+|---|---|
 |---|---|
 | [`herdr/`](herdr/) | Turns pi into a native participant of a running [herdr](https://herdr.dev) instance. Registers `herdr_overview`, `herdr_read`, `herdr_wait`, `herdr_dispatch` — plus a session manifest and `herdr-restore`, which reattaches pi sessions to panes that herdr restored as empty shells after a reboot. **Env-gated:** requires `HERDR_ENV=1`; registers nothing outside herdr. |
 
@@ -67,6 +70,9 @@ Mostly macOS, and mostly `pi` itself. Specific extensions need:
 - **cenno/** — the cenno app (`brew install --cask glebis/tap/cenno`), macOS
 - **herdr/** — a running herdr instance, `HERDR_ENV=1`, the `herdr-task` wrapper
 - **telegram-telethon/** — the `telegram-telethon` skill checkout, `python3`
+- **spec-review/** — Node.js 22+; Codex CLI and/or Claude Code installed and
+  authenticated if you want them as reviewers (pi reviewers need only pi).
+  Run `npm test` inside the directory.
 
 `node_modules/` directories, where present, hold only symlinks into pi's own
 bundled dependencies for editor/`tsc` support — pi resolves those packages

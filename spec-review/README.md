@@ -7,20 +7,27 @@ launched directly in isolated contexts.
 
 ## Install
 
-From this package directory:
+From the repository root:
 
 ```bash
-pi -e ./index.ts
+git clone https://github.com/glebis/pi-extensions ~/.pi/agent/extensions
 ```
 
-Or install it permanently:
+Or add just this extension by copying the directory into
+`~/.pi/agent/extensions/`. To try it for one invocation without installing:
 
 ```bash
-pi install /absolute/path/to/spec-review
+pi -e ./spec-review
 ```
 
-The current session does not pick up an extension installed mid-session.
-Installing does not modify global settings.
+Or install it permanently from the checked-out directory:
+
+```bash
+pi install ./spec-review
+```
+
+The current session does not pick up an extension installed mid-session; use
+`/reload`. Installing does not modify global settings.
 
 For saved reviewer sets, create `.pi/spec-review.json` in the target project
 following `config.example.json`. The model is optional: with `model` absent or

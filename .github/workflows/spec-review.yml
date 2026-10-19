@@ -1,0 +1,27 @@
+name: spec-review
+
+on:
+  push:
+    paths:
+      - 'spec-review/**'
+      - '.github/workflows/spec-review.yml'
+  pull_request:
+    paths:
+      - 'spec-review/**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: spec-review
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # install pi so the tests can load the extension through its real loader;
+      # no model calls are made and no credentials are needed
+      - run: npm install -g @earendil-works/pi-coding-agent
+      - run: npm test

@@ -3,9 +3,9 @@
   "presets": {
     "deep": {
       "reviewers": [
-        { "id": "pi-reviewer", "kind": "pi", "model": "anthropic/claude-sonnet-5-5" },
-        { "id": "codex-reviewer", "kind": "codex", "model": "gpt-6.1-sol" },
-        { "id": "claude-reviewer", "kind": "claude", "model": "claude-opus-5-5" }
+        { "id": "reviewer-1", "kind": "pi" },
+        { "id": "reviewer-2", "kind": "codex" },
+        { "id": "reviewer-3", "kind": "claude" }
       ],
       "minimum": 2,
       "context": [],
